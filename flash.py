@@ -338,6 +338,7 @@ def flash(port: str, erase_first: bool = False, baud: int = BAUD, full: bool = F
         rc = run(args)
 
     if rc == 0:
+        reset_device(port)
         ok("Firmware flashed successfully.")
         print()
         info(_c("1", "Controls"))
@@ -353,6 +354,32 @@ def flash(port: str, erase_first: bool = False, baud: int = BAUD, full: bool = F
     return False
 
 
+def reset_device(port: str) -> bool:
+    """Kick the ESP32-S3 out of USB download mode after flashing.
+
+    esptool's RTS reset is a no-op on the native USB-Serial/JTAG peripheral, so
+    the board can stay in download mode (silent, dark screen) until the cable is
+    replugged. Toggling DTR/RTS through the CDC port resets it reliably.
+    """
+    try:
+        import serial
+    except ImportError:
+        return False
+    try:
+        p = serial.Serial(port, 115200, timeout=0.2)
+        p.setDTR(False)
+        p.setRTS(True)
+        time.sleep(0.2)
+        p.setRTS(False)
+        time.sleep(0.3)
+        p.setDTR(True)
+        time.sleep(0.2)
+        p.close()
+        return True
+    except Exception:
+        return False
+
+
 def _flash_split(tool: list[str], port: str, baud: int, build_dir: str, erase_first: bool) -> bool:
     base = [*tool, "--chip", CHIP, "--port", port, "--baud", str(baud)]
     if erase_first:
@@ -363,6 +390,7 @@ def _flash_split(tool: list[str], port: str, baud: int, build_dir: str, erase_fi
               "0x8000", os.path.join(build_dir, "partitions.bin"),
               "0x10000", os.path.join(build_dir, "firmware.bin")])
     if rc == 0:
+        reset_device(port)
         ok("Firmware flashed successfully.")
     return rc == 0
 

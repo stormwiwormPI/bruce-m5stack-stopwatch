@@ -217,7 +217,7 @@ snapshot of upstream Bruce with this board added.
 | `Could not open port` | Close other serial monitors; try `--port`; reinstall the USB-C cable. |
 | `Failed to connect to ESP32-S3` | Hold the left button while plugging in, then retry. |
 | No serial output after flashing | Use a data cable and check the port list; the StopWatch exposes USB CDC (`303A:1001`). |
-| Blank / dark screen | The image is for the **16 MB** StopWatch; check you flashed the merged image at `0x0` at least once. |
+| Blank / dark screen | The flasher resets the board automatically. If it still stays dark, unplug the USB-C cable and plug it back in. |
 | Screen flickers at boot | Harmless PMIC start-up noise; the 350 ms grace period suppresses input, not output. |
 | Wi-Fi attacks do nothing | The target must be within range and on a channel the radio can reach; deauth requires the AP to be on 2.4 GHz. |
 
