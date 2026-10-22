@@ -1,0 +1,26 @@
+# ---- build artefacts -------------------------------------------------------
+firmware/.pio/
+firmware/.vscode/
+firmware/*.bin
+firmware/include/webFiles.h
+firmware/include/current_year.h
+firmware/checksum.sha256
+firmware/mqjs_build/
+firmware/compile_commands.json
+
+# ---- OS / editor noise -----------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+
+# ---- python ----------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- local scratch ---------------------------------------------------------
+*.log
+tmp/
